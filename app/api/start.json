@@ -1222,7 +1222,7 @@
                           "data": {
                             "To": "{{$_POST.From}}",
                             "From": "whatsapp:+14155238886",
-                            "Body": "{{'Por cierto te he creado una *wallet de Solana* que puedes usar conmigo para *depositar, intercambiar y retirar USDC* 🤑:'}}"
+                            "Body": "{{'Por cierto te he creado una *wallet de Solana* que puedes usar conmigo para *depositar, intercambiar y retirar USDC* 🤑 (no olvides Destacar este mensaje en nuestra conversación):'}}"
                           },
                           "username": "{{$_ENV.TWILIO_USER}}"
                         }
@@ -1245,6 +1245,30 @@
                         }
                       }
                     ]
+                  }
+                },
+                "outputType": "boolean"
+              },
+              {
+                "name": "",
+                "module": "core",
+                "action": "condition",
+                "options": {
+                  "if": "{{openAIcompletion.data.choices[0].text.contains('#balance#')}}",
+                  "then": {
+                    "steps": {
+                      "name": "balanceRoute",
+                      "module": "core",
+                      "action": "exec",
+                      "options": {
+                        "exec": "balanceRoute",
+                        "params": {
+                          "From": "{{$_POST.From}}",
+                          "WaId": "{{$_POST.WaId}}"
+                        }
+                      },
+                      "output": true
+                    }
                   }
                 },
                 "outputType": "boolean"

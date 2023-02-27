@@ -1,0 +1,24 @@
+{
+  "meta": {
+    "$_POST": [
+      {
+        "type": "text",
+        "name": "WaId"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "wa",
+      "module": "core",
+      "action": "exec",
+      "options": {
+        "exec": "balanceRoute",
+        "params": {
+          "WaId": "{{$_POST.WaId}}"
+        }
+      },
+      "output": true
+    }
+  }
+}

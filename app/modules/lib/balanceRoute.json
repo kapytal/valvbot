@@ -1,0 +1,190 @@
+{
+  "meta": {
+    "$_PARAM": [
+      {
+        "type": "text",
+        "name": "WaId"
+      },
+      {
+        "type": "text",
+        "name": "From"
+      }
+    ]
+  },
+  "exec": {
+    "steps": [
+      {
+        "name": "getUser",
+        "module": "dbconnector",
+        "action": "single",
+        "options": {
+          "connection": "db",
+          "sql": {
+            "type": "SELECT",
+            "columns": [],
+            "params": [
+              {
+                "operator": "equal",
+                "type": "expression",
+                "name": ":P1",
+                "value": "{{$_PARAM.WaId}}",
+                "test": ""
+              }
+            ],
+            "table": {
+              "name": "user"
+            },
+            "primary": "id",
+            "joins": [],
+            "sub": {
+              "wallet": {
+                "table": {
+                  "name": "wallet",
+                  "alias": "wallet"
+                },
+                "key": "userId"
+              }
+            },
+            "wheres": {
+              "condition": "AND",
+              "rules": [
+                {
+                  "id": "user.WaId",
+                  "field": "user.WaId",
+                  "type": "string",
+                  "operator": "equal",
+                  "value": "{{$_PARAM.WaId}}",
+                  "data": {
+                    "table": "user",
+                    "column": "WaId",
+                    "type": "text",
+                    "columnObj": {
+                      "type": "string",
+                      "maxLength": 255,
+                      "primary": false,
+                      "unique": false,
+                      "nullable": true,
+                      "name": "WaId"
+                    }
+                  },
+                  "operation": "="
+                }
+              ],
+              "conditional": null,
+              "valid": true
+            },
+            "query": "SELECT *\nFROM user\nWHERE WaId = :P1 /* {{$_PARAM.WaId}} */"
+          }
+        },
+        "meta": [
+          {
+            "type": "number",
+            "name": "id"
+          },
+          {
+            "type": "text",
+            "name": "WaId"
+          },
+          {
+            "type": "text",
+            "name": "VirtualAccount"
+          },
+          {
+            "type": "boolean",
+            "name": "knowsWallet"
+          },
+          {
+            "name": "wallet",
+            "type": "array",
+            "sub": [
+              {
+                "type": "number",
+                "name": "id"
+              },
+              {
+                "type": "text",
+                "name": "mnemonic_enc"
+              },
+              {
+                "type": "text",
+                "name": "address"
+              },
+              {
+                "type": "text",
+                "name": "privateKey_enc"
+              },
+              {
+                "type": "number",
+                "name": "userId"
+              }
+            ]
+          }
+        ],
+        "outputType": "object"
+      },
+      {
+        "name": "getTatumBalance",
+        "module": "api",
+        "action": "send",
+        "options": {
+          "url": "{{'https://api-eu1.tatum.io/v3/ledger/account/'+getUser.VirtualAccount+'/balance'}}",
+          "headers": {
+            "x-api-key": "{{$_ENV.TATUM_KEY}}"
+          },
+          "schema": [
+            {
+              "type": "object",
+              "name": "data",
+              "sub": [
+                {
+                  "type": "text",
+                  "name": "accountBalance"
+                },
+                {
+                  "type": "text",
+                  "name": "availableBalance"
+                }
+              ]
+            }
+          ]
+        },
+        "output": true,
+        "meta": [
+          {
+            "type": "object",
+            "name": "data",
+            "sub": [
+              {
+                "type": "text",
+                "name": "accountBalance"
+              },
+              {
+                "type": "text",
+                "name": "availableBalance"
+              }
+            ]
+          }
+        ],
+        "outputType": "object"
+      },
+      {
+        "name": "sendWhatsapp",
+        "module": "api",
+        "action": "send",
+        "options": {
+          "url": "https://api.twilio.com/2010-04-01/Accounts/AC65f728ee6851d7a16224843eeaf97a2f/Messages.json",
+          "method": "POST",
+          "data": {
+            "To": "{{$_PARAM.From}}",
+            "From": "whatsapp:+14155238886",
+            "Body": "{{'El balance de tu wallet solana ```'+getUser.wallet[0].address+'``` es de '+getTatumBalance.data.accountBalance+' USDC ('+getTatumBalance.data.availableBalance+' disponibles).'}}"
+          },
+          "auth": "username",
+          "username": "{{$_ENV.TWILIO_USER}}",
+          "password": "{{$_ENV.TWILIO_API}}"
+        },
+        "output": true
+      }
+    ]
+  }
+}
