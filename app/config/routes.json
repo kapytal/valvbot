@@ -3,7 +3,6 @@
     {
       "path": "/",
       "page": "index",
-      "routeType": "page",
       "layout": "main"
     }
   ]

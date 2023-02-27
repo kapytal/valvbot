@@ -1,2 +1,12 @@
-<!-- Wappler include head-page="layouts/main" -->
+<!-- Wappler include head-page="layouts/main" is="dmx-app" id="index" appConnect="local" bootstrap5="flatly" fontawesome_5="local" bootstrap_icons="local" components="{dmxBrowser:{}}" -->
 <meta name="ac:route" content="/">
+<div is="dmx-browser" id="browser1"></div>
+<main>
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <button id="btnWhatsapp" class="btn text-center btn-success btn-lg" dmx-on:click="browser1.goto('https://wa.me/14155238886?text=join%20left-cheese')">Button</button>
+            </div>
+        </div>
+    </div>
+</main>

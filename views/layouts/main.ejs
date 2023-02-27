@@ -1,13 +1,37 @@
 <!doctype html>
 <html>
-<head>
-<base href="/">
-<meta charset="UTF-8">
-<title>Untitled Document</title>
 
+<head>
+  <base href="/">
+  <script src="/dmxAppConnect/dmxAppConnect.js"></script>
+  <meta charset="UTF-8">
+  <title>Untitled Document</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" href="/bootstrap/5/flatly/bootstrap.min.css" />
+  <link rel="stylesheet" href="/fontawesome5/css/all.min.css" />
+  <link rel="stylesheet" href="/css/bootstrap-icons.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <script src="/dmxAppConnect/dmxBootstrap5Navigation/dmxBootstrap5Navigation.js" defer></script>
+  <script src="/dmxAppConnect/dmxRouting/dmxRouting.js" defer></script>
+  <script src="/dmxAppConnect/dmxBrowser/dmxBrowser.js" defer></script>
 </head>
-<body>
-<div is="dmx-view" id="content">
-  <%- await include(content, locals); %>
-</div></body>
+
+<body is="dmx-app" id="main">
+  <header class="bg-light">
+    <div class="container">
+      <div class="row">
+        <div class="col">
+          <nav class="navbar navbar-expand-lg navbar-light bg-light justify-content-between">
+          </nav>
+        </div>
+      </div>
+    </div>
+  </header>
+  <div is="dmx-view" id="content">
+    <%- await include(content, locals); %>
+  </div>
+  <script src="/bootstrap/5/js/bootstrap.bundle.min.js"></script>
+</body>
+
 </html>
