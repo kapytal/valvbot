@@ -2,3 +2,4 @@
 
 ## Instructions
 1. Send a whatsapp message to our phonenumber with the code `join left-cheese`. The easiest way to do it is visit our [website](https://valv.bubbleapps.io/version-test) and clicking in the Whatsapp link from your phone 
+2. Start chatting with Valv. If you are a new user Valve will create a solana address for you automatically. (you can ask Valve to tell you your address anytime by asking for your balance)
