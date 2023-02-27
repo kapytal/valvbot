@@ -1,0 +1,37 @@
+{
+  "meta": {
+    "$_POST": [
+      {
+        "type": "text",
+        "name": "WaId"
+      }
+    ]
+  },
+  "exec": {
+    "steps": [
+      {
+        "name": "",
+        "module": "core",
+        "action": "exec",
+        "options": {
+          "exec": "get_address",
+          "params": {
+            "WaId": "{{$_POST.WaId}}"
+          }
+        },
+        "output": true
+      },
+      {
+        "name": "address",
+        "module": "core",
+        "action": "setvalue",
+        "options": {
+          "value": "{{getWallet.wallet[0].address}}"
+        },
+        "meta": [],
+        "outputType": "text",
+        "output": true
+      }
+    ]
+  }
+}

@@ -1,0 +1,130 @@
+{
+  "meta": {
+    "$_PARAM": [
+      {
+        "type": "text",
+        "name": "WaId"
+      }
+    ]
+  },
+  "exec": {
+    "steps": [
+      {
+        "name": "getWallet",
+        "module": "dbconnector",
+        "action": "single",
+        "options": {
+          "connection": "db",
+          "sql": {
+            "type": "SELECT",
+            "columns": [],
+            "params": [
+              {
+                "operator": "equal",
+                "type": "expression",
+                "name": ":P1",
+                "value": "{{$_PARAM.WaId}}",
+                "test": "123456"
+              }
+            ],
+            "table": {
+              "name": "user"
+            },
+            "primary": "id",
+            "joins": [],
+            "sub": {
+              "wallet": {
+                "table": {
+                  "name": "wallet",
+                  "alias": "wallet"
+                },
+                "key": "userId"
+              }
+            },
+            "wheres": {
+              "condition": "AND",
+              "rules": [
+                {
+                  "id": "user.WaId",
+                  "field": "user.WaId",
+                  "type": "string",
+                  "operator": "equal",
+                  "value": "{{$_PARAM.WaId}}",
+                  "data": {
+                    "table": "user",
+                    "column": "WaId",
+                    "type": "text",
+                    "columnObj": {
+                      "type": "string",
+                      "maxLength": 255,
+                      "primary": false,
+                      "unique": false,
+                      "nullable": true,
+                      "name": "WaId"
+                    }
+                  },
+                  "operation": "="
+                }
+              ],
+              "conditional": null,
+              "valid": true
+            },
+            "query": "SELECT *\nFROM user\nWHERE WaId = :P1 /* {{$_PARAM.WaId}} */"
+          }
+        },
+        "meta": [
+          {
+            "type": "number",
+            "name": "id"
+          },
+          {
+            "type": "text",
+            "name": "WaId"
+          },
+          {
+            "type": "text",
+            "name": "VirtualAccount"
+          },
+          {
+            "name": "wallet",
+            "type": "array",
+            "sub": [
+              {
+                "type": "number",
+                "name": "id"
+              },
+              {
+                "type": "text",
+                "name": "mnemonic_enc"
+              },
+              {
+                "type": "text",
+                "name": "address"
+              },
+              {
+                "type": "text",
+                "name": "privateKey_enc"
+              },
+              {
+                "type": "number",
+                "name": "userId"
+              }
+            ]
+          }
+        ],
+        "outputType": "object",
+        "output": true
+      },
+      {
+        "name": "address",
+        "module": "core",
+        "action": "setvalue",
+        "options": {
+          "value": "{{getWallet.wallet[0].address}}"
+        },
+        "meta": [],
+        "outputType": "text"
+      }
+    ]
+  }
+}
