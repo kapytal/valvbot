@@ -1,0 +1,25 @@
+{
+  "meta": {
+    "$_POST": [
+      {
+        "type": "text",
+        "name": "amount"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "api",
+      "module": "api",
+      "action": "send",
+      "options": {
+        "url": "https://webhook.site/2e472793-b348-494d-963d-1382e9d0ded2",
+        "method": "POST",
+        "data": {
+          "amount": "{{$_POST.amount}}"
+        }
+      },
+      "output": true
+    }
+  }
+}
