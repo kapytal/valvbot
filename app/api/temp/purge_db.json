@@ -1,0 +1,123 @@
+{
+  "meta": {
+    "$_POST": [
+      {
+        "type": "text",
+        "name": "password"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "",
+      "module": "core",
+      "action": "condition",
+      "options": {
+        "if": "{{$_POST.password==$_ENV.ENC_SECRET}}",
+        "then": {
+          "steps": [
+            {
+              "name": "deleteWallets",
+              "module": "dbupdater",
+              "action": "delete",
+              "options": {
+                "connection": "db",
+                "sql": {
+                  "type": "delete",
+                  "table": "wallet",
+                  "wheres": {
+                    "condition": "AND",
+                    "rules": [
+                      {
+                        "id": "userId",
+                        "field": "userId",
+                        "type": "double",
+                        "operator": "is_not_null",
+                        "value": null,
+                        "data": {
+                          "column": "userId"
+                        },
+                        "operation": "IS NOT NULL"
+                      }
+                    ],
+                    "conditional": null,
+                    "valid": true
+                  },
+                  "returning": "id",
+                  "query": "DELETE\nFROM wallet\nWHERE userId IS NOT NULL",
+                  "params": []
+                }
+              },
+              "meta": [
+                {
+                  "name": "affected",
+                  "type": "number"
+                }
+              ]
+            },
+            {
+              "name": "deleteUsers",
+              "module": "dbupdater",
+              "action": "delete",
+              "options": {
+                "connection": "db",
+                "sql": {
+                  "type": "delete",
+                  "table": "user",
+                  "wheres": {
+                    "condition": "AND",
+                    "rules": [
+                      {
+                        "id": "id",
+                        "field": "id",
+                        "type": "double",
+                        "operator": "greater",
+                        "value": 0,
+                        "data": {
+                          "column": "id"
+                        },
+                        "operation": ">"
+                      }
+                    ],
+                    "conditional": null,
+                    "valid": true
+                  },
+                  "returning": "id",
+                  "query": "DELETE\nFROM user\nWHERE id > 0",
+                  "params": []
+                }
+              },
+              "meta": [
+                {
+                  "name": "affected",
+                  "type": "number"
+                }
+              ]
+            },
+            {
+              "name": "",
+              "module": "core",
+              "action": "response",
+              "options": {
+                "status": 204,
+                "data": "All wallets and users deleted."
+              }
+            }
+          ]
+        },
+        "else": {
+          "steps": {
+            "name": "",
+            "module": "core",
+            "action": "response",
+            "options": {
+              "status": 400,
+              "data": "Unauthorized"
+            }
+          }
+        }
+      },
+      "outputType": "boolean"
+    }
+  }
+}
