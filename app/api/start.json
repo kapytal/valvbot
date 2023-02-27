@@ -1184,6 +1184,17 @@
                 "output": false
               },
               {
+                "name": "sample",
+                "module": "core",
+                "action": "exec",
+                "options": {
+                  "exec": "get_address",
+                  "params": {
+                    "WaId": "{{$_POST.WaId}}"
+                  }
+                }
+              },
+              {
                 "name": "",
                 "module": "core",
                 "action": "condition",
@@ -1197,17 +1208,6 @@
                         "action": "wait",
                         "options": {
                           "delay": 3000
-                        }
-                      },
-                      {
-                        "name": "sample",
-                        "module": "core",
-                        "action": "exec",
-                        "options": {
-                          "exec": "get_address",
-                          "params": {
-                            "WaId": "{{$_POST.WaId}}"
-                          }
                         }
                       },
                       {
@@ -1229,6 +1229,35 @@
                       },
                       {
                         "name": "sendWhatsapp_wallet_copy",
+                        "module": "api",
+                        "action": "send",
+                        "options": {
+                          "url": "https://api.twilio.com/2010-04-01/Accounts/AC65f728ee6851d7a16224843eeaf97a2f/Messages.json",
+                          "method": "POST",
+                          "auth": "username",
+                          "password": "{{$_ENV.TWILIO_API}}",
+                          "data": {
+                            "To": "{{$_POST.From}}",
+                            "From": "whatsapp:+14155238886",
+                            "Body": "{{'```'+sample.getWallet.wallet[0].address+'```'}}"
+                          },
+                          "username": "{{$_ENV.TWILIO_USER}}"
+                        }
+                      }
+                    ]
+                  },
+                  "else": {
+                    "steps": [
+                      {
+                        "name": "wait1",
+                        "module": "core",
+                        "action": "wait",
+                        "options": {
+                          "delay": 3000
+                        }
+                      },
+                      {
+                        "name": "sendWhatsapp_wallet_copy_copy",
                         "module": "api",
                         "action": "send",
                         "options": {
