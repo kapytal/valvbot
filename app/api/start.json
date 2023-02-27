@@ -1085,7 +1085,7 @@
                   "url": "https://api.twilio.com/2010-04-01/Accounts/AC65f728ee6851d7a16224843eeaf97a2f/Messages.json",
                   "method": "POST",
                   "auth": "username",
-                  "username": "AC65f728ee6851d7a16224843eeaf97a2f",
+                  "username": "{{$_ENV['TWILIO-USER']}}",
                   "password": "{{$_ENV['TWILIO-API']}}",
                   "data": {
                     "To": "{{$_POST.From}}",
@@ -1106,7 +1106,7 @@
                 "url": "https://api.twilio.com/2010-04-01/Accounts/AC65f728ee6851d7a16224843eeaf97a2f/Messages.json",
                 "method": "POST",
                 "auth": "username",
-                "username": "AC65f728ee6851d7a16224843eeaf97a2f",
+                "username": "{{$_ENV['TWILIO-USER']}}",
                 "password": "{{$_ENV['TWILIO-API']}}",
                 "data": {
                   "To": "{{$_POST.From}}",
