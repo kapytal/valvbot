@@ -2,7 +2,7 @@
 
 ## Why
 Because if we want crypto to be massive we must go to where the masses are. Whatsapp is used by billions of people.
-If we allow people to get into crypto through whatsapp we can enable 5 minute remmitances. No "download this app" or "keep your seed phrase safe"
+If we allow people to get into crypto through whatsapp we can enable 5 minute remmitances (for example). No more "download this app" or "keep your seed phrase safe"
 
 ### GPT?
 Yes, because that way no matter how "silly" your question is regarding crypto, Valve will always answer politely and in a friendly manner.
