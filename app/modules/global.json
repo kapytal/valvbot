@@ -3,27 +3,27 @@
     "$_ENV": [
       {
         "type": "text",
-        "name": "OPENAI-API"
+        "name": "OPENAI_API"
       },
       {
         "type": "text",
-        "name": "TWILIO-API"
+        "name": "TWILIO_API"
       },
       {
         "type": "text",
-        "name": "GOOGLE-ISSUER"
+        "name": "GOOGLE_ISSUER"
       },
       {
         "type": "text",
-        "name": "GOOGLE-KEY"
+        "name": "GOOGLE_KEY"
       },
       {
         "type": "text",
-        "name": "GOOGLE-SCOPE"
+        "name": "GOOGLE_SCOPE"
       },
       {
         "type": "text",
-        "name": "TWILIO-USER"
+        "name": "TWILIO_USER"
       }
     ]
   },
