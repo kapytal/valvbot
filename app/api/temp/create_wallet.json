@@ -1,9 +1,0 @@
-{
-  "name": "createWallet",
-  "module": "core",
-  "action": "exec",
-  "options": {
-    "exec": "create_wallet"
-  },
-  "output": true
-}
