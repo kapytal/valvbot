@@ -10,27 +10,112 @@
   "exec": {
     "steps": [
       {
-        "name": "",
-        "module": "core",
-        "action": "exec",
+        "name": "query",
+        "module": "dbconnector",
+        "action": "single",
         "options": {
-          "exec": "get_address",
-          "params": {
-            "WaId": "{{$_POST.WaId}}"
+          "connection": "db",
+          "sql": {
+            "type": "SELECT",
+            "columns": [
+              {
+                "table": "user",
+                "column": "*"
+              }
+            ],
+            "params": [
+              {
+                "operator": "equal",
+                "type": "expression",
+                "name": ":P1",
+                "value": "{{$_POST.WaId}}",
+                "test": ""
+              }
+            ],
+            "table": {
+              "name": "user"
+            },
+            "primary": "id",
+            "joins": [],
+            "wheres": {
+              "condition": "AND",
+              "rules": [
+                {
+                  "id": "user.WaId",
+                  "field": "user.WaId",
+                  "type": "string",
+                  "operator": "equal",
+                  "value": "{{$_POST.WaId}}",
+                  "data": {
+                    "table": "user",
+                    "column": "WaId",
+                    "type": "text",
+                    "columnObj": {
+                      "type": "string",
+                      "maxLength": 255,
+                      "primary": false,
+                      "unique": false,
+                      "nullable": true,
+                      "name": "WaId"
+                    }
+                  },
+                  "operation": "="
+                }
+              ],
+              "conditional": null,
+              "valid": true
+            },
+            "query": "SELECT *\nFROM user\nWHERE WaId = :P1 /* {{$_POST.WaId}} */"
           }
         },
-        "output": true
+        "meta": [
+          {
+            "type": "number",
+            "name": "id"
+          },
+          {
+            "type": "text",
+            "name": "WaId"
+          },
+          {
+            "type": "text",
+            "name": "VirtualAccount"
+          }
+        ],
+        "outputType": "object"
       },
       {
-        "name": "address",
+        "name": "",
         "module": "core",
-        "action": "setvalue",
+        "action": "condition",
         "options": {
-          "value": "{{getWallet.wallet[0].address}}"
+          "if": "{{!query.WaId}}",
+          "then": {
+            "steps": {
+              "name": "noExists",
+              "module": "core",
+              "action": "response",
+              "options": {
+                "status": 201,
+                "data": "user doesnt exist"
+              }
+            }
+          },
+          "else": {
+            "steps": {
+              "name": "user",
+              "module": "core",
+              "action": "setvalue",
+              "options": {
+                "value": "{{query.WaId}}"
+              },
+              "meta": [],
+              "outputType": "text",
+              "output": true
+            }
+          }
         },
-        "meta": [],
-        "outputType": "text",
-        "output": true
+        "outputType": "boolean"
       }
     ]
   }

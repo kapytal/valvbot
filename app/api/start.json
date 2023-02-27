@@ -22,6 +22,95 @@
   "exec": {
     "steps": [
       {
+        "name": "searchWaId",
+        "module": "dbconnector",
+        "action": "single",
+        "options": {
+          "connection": "db",
+          "sql": {
+            "type": "SELECT",
+            "columns": [
+              {
+                "table": "user",
+                "column": "id"
+              }
+            ],
+            "params": [
+              {
+                "operator": "equal",
+                "type": "expression",
+                "name": ":P1",
+                "value": "{{$_POST.WaId}}",
+                "test": ""
+              }
+            ],
+            "table": {
+              "name": "user"
+            },
+            "primary": "id",
+            "joins": [],
+            "wheres": {
+              "condition": "AND",
+              "rules": [
+                {
+                  "id": "user.WaId",
+                  "field": "user.WaId",
+                  "type": "string",
+                  "operator": "equal",
+                  "value": "{{$_POST.WaId}}",
+                  "data": {
+                    "table": "user",
+                    "column": "WaId",
+                    "type": "text",
+                    "columnObj": {
+                      "type": "string",
+                      "maxLength": 255,
+                      "primary": false,
+                      "unique": false,
+                      "nullable": true,
+                      "name": "WaId"
+                    }
+                  },
+                  "operation": "="
+                }
+              ],
+              "conditional": null,
+              "valid": true
+            },
+            "query": "SELECT id\nFROM user\nWHERE WaId = :P1 /* {{$_POST.WaId}} */"
+          }
+        },
+        "meta": [
+          {
+            "type": "number",
+            "name": "id"
+          }
+        ],
+        "outputType": "object"
+      },
+      {
+        "name": "",
+        "module": "core",
+        "action": "condition",
+        "options": {
+          "if": "{{!searchWaId.id}}",
+          "then": {
+            "steps": {
+              "name": "registerUser",
+              "module": "core",
+              "action": "exec",
+              "options": {
+                "exec": "create_user",
+                "params": {
+                  "WaId": "{{$_POST.WaId}}"
+                }
+              }
+            }
+          }
+        },
+        "outputType": "boolean"
+      },
+      {
         "name": "jwt",
         "module": "jwt",
         "action": "sign",
@@ -1010,7 +1099,6 @@
                     }
                   ]
                 },
-                "output": true,
                 "meta": [
                   {
                     "type": "object",
@@ -1096,24 +1184,70 @@
                 "output": false
               },
               {
-                "name": "wait",
+                "name": "",
                 "module": "core",
-                "action": "wait",
+                "action": "condition",
                 "options": {
-                  "delay": 3000
-                }
-              },
-              {
-                "name": "sample",
-                "module": "core",
-                "action": "exec",
-                "options": {
-                  "exec": "get_address",
-                  "params": {
-                    "WaId": 123456
+                  "if": "{{!searchWaId.id}}",
+                  "then": {
+                    "steps": [
+                      {
+                        "name": "wait",
+                        "module": "core",
+                        "action": "wait",
+                        "options": {
+                          "delay": 10000
+                        }
+                      },
+                      {
+                        "name": "sample",
+                        "module": "core",
+                        "action": "exec",
+                        "options": {
+                          "exec": "get_address",
+                          "params": {
+                            "WaId": "{{$_POST.WaId}}"
+                          }
+                        }
+                      },
+                      {
+                        "name": "sendWhatsapp_wallet",
+                        "module": "api",
+                        "action": "send",
+                        "options": {
+                          "url": "https://api.twilio.com/2010-04-01/Accounts/AC65f728ee6851d7a16224843eeaf97a2f/Messages.json",
+                          "method": "POST",
+                          "auth": "username",
+                          "password": "{{$_ENV.TWILIO_API}}",
+                          "data": {
+                            "To": "{{$_POST.From}}",
+                            "From": "whatsapp:+14155238886",
+                            "Body": "{{'Por cierto te he creado una *wallet de Solana* que puedes usar conmigo para *depositar, intercambiar y retirar USDC* 🤑:'}}"
+                          },
+                          "username": "{{$_ENV.TWILIO_USER}}"
+                        }
+                      },
+                      {
+                        "name": "sendWhatsapp_wallet_copy",
+                        "module": "api",
+                        "action": "send",
+                        "options": {
+                          "url": "https://api.twilio.com/2010-04-01/Accounts/AC65f728ee6851d7a16224843eeaf97a2f/Messages.json",
+                          "method": "POST",
+                          "auth": "username",
+                          "password": "{{$_ENV.TWILIO_API}}",
+                          "data": {
+                            "To": "{{$_POST.From}}",
+                            "From": "whatsapp:+14155238886",
+                            "Body": "{{'```'+sample.getWallet.wallet[0].address+'```'}}"
+                          },
+                          "username": "{{$_ENV.TWILIO_USER}}"
+                        }
+                      }
+                    ]
                   }
                 },
-                "output": true
+                "outputType": "boolean"
               }
             ]
           },
