@@ -1,0 +1,27 @@
+{
+  "meta": {
+    "$_ENV": [
+      {
+        "type": "text",
+        "name": "OPENAI-API"
+      },
+      {
+        "type": "text",
+        "name": "TWILIO-API"
+      },
+      {
+        "type": "text",
+        "name": "GOOGLE-ISSUER"
+      },
+      {
+        "type": "text",
+        "name": "GOOGLE-KEY"
+      },
+      {
+        "type": "text",
+        "name": "GOOGLE-SCOPE"
+      }
+    ]
+  },
+  "exec": {}
+}
