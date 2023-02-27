@@ -1094,6 +1094,26 @@
                   "username": "{{$_ENV.TWILIO_USER}}"
                 },
                 "output": false
+              },
+              {
+                "name": "wait",
+                "module": "core",
+                "action": "wait",
+                "options": {
+                  "delay": 3000
+                }
+              },
+              {
+                "name": "sample",
+                "module": "core",
+                "action": "exec",
+                "options": {
+                  "exec": "get_address",
+                  "params": {
+                    "WaId": 123456
+                  }
+                },
+                "output": true
               }
             ]
           },
