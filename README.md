@@ -12,9 +12,12 @@ Yes, because that way no matter how "silly" your question is regarding crypto, V
 2. Start chatting with Valv. If you are a new user Valve will create a solana address for you automatically. (you can ask Valve to tell you your address anytime by asking for your balance)
 
 ### How to buy
-- Send a message to Valve saying you want to buy. It will guide you through the process:
+Send a message to Valve saying you want to buy. It will guide you through the process:
 1) **Amount**
 2) **Payment method:** for bank transfer it will send you a bank account and reference.
 
 ### How to sell
 Send a message to Valve saying you want to sell. You are only able to sell the USDC that is in your Solana/Valve wallet.
+
+### How to deposit
+Just ask for your balance. Valve will remind you your wallet address. Send some USDC in Solana network and once it arrives Valve will notify you.
