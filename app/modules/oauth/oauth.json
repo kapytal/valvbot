@@ -1,0 +1,17 @@
+{
+  "name": "oauth",
+  "module": "oauth",
+  "action": "provider",
+  "options": {
+    "jwt_bearer": "jwt",
+    "oauth_type": "jwt",
+    "service": "google"
+  },
+  "meta": [
+    {
+      "name": "access_token",
+      "type": "text"
+    }
+  ],
+  "outputType": "object"
+}
