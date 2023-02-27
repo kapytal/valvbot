@@ -1,0 +1,89 @@
+{
+  "meta": {
+    "$_GET": [
+      {
+        "type": "text",
+        "name": "sort"
+      },
+      {
+        "type": "text",
+        "name": "dir"
+      }
+    ],
+    "$_POST": [
+      {
+        "type": "text",
+        "name": "password"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "",
+      "module": "core",
+      "action": "condition",
+      "options": {
+        "if": "{{$_POST.password==$_ENV.ENC_SECRET}}",
+        "then": {
+          "steps": {
+            "name": "users",
+            "module": "dbconnector",
+            "action": "select",
+            "options": {
+              "connection": "db",
+              "sql": {
+                "type": "SELECT",
+                "columns": [
+                  {
+                    "table": "user",
+                    "column": "*"
+                  }
+                ],
+                "params": [],
+                "table": {
+                  "name": "user"
+                },
+                "primary": "id",
+                "joins": [],
+                "orders": [],
+                "query": "SELECT *\nFROM user"
+              }
+            },
+            "output": true,
+            "meta": [
+              {
+                "type": "number",
+                "name": "id"
+              },
+              {
+                "type": "text",
+                "name": "WaId"
+              },
+              {
+                "type": "text",
+                "name": "VirtualAccount"
+              },
+              {
+                "type": "boolean",
+                "name": "knowsWallet"
+              }
+            ],
+            "outputType": "array"
+          }
+        },
+        "else": {
+          "steps": {
+            "name": "",
+            "module": "core",
+            "action": "response",
+            "options": {
+              "status": 400,
+              "data": "Unauthorized"
+            }
+          }
+        }
+      },
+      "outputType": "boolean"
+    }
+  }
+}
