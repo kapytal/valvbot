@@ -1,0 +1,326 @@
+[
+  {
+    "name": "tatumSolanaGenerateWallet",
+    "module": "api",
+    "action": "send",
+    "options": {
+      "url": " https://api.tatum.io/v3/solana/wallet",
+      "headers": {
+        "x-api-key": "{{$_ENV.TATUM_KEY}}"
+      },
+      "schema": [
+        {
+          "type": "object",
+          "name": "data",
+          "sub": [
+            {
+              "type": "text",
+              "name": "mnemonic"
+            },
+            {
+              "type": "text",
+              "name": "address"
+            },
+            {
+              "type": "text",
+              "name": "privateKey"
+            }
+          ]
+        },
+        {
+          "type": "object",
+          "name": "headers",
+          "sub": [
+            {
+              "type": "text",
+              "name": "access-control-allow-origin"
+            },
+            {
+              "type": "text",
+              "name": "alt-svc"
+            },
+            {
+              "type": "text",
+              "name": "cf-cache-status"
+            },
+            {
+              "type": "text",
+              "name": "cf-ray"
+            },
+            {
+              "type": "text",
+              "name": "content-encoding"
+            },
+            {
+              "type": "text",
+              "name": "content-security-policy"
+            },
+            {
+              "type": "text",
+              "name": "content-type"
+            },
+            {
+              "type": "text",
+              "name": "date"
+            },
+            {
+              "type": "text",
+              "name": "etag"
+            },
+            {
+              "type": "text",
+              "name": "expect-ct"
+            },
+            {
+              "type": "text",
+              "name": "nel"
+            },
+            {
+              "type": "text",
+              "name": "referrer-policy"
+            },
+            {
+              "type": "text",
+              "name": "report-to"
+            },
+            {
+              "type": "text",
+              "name": "server"
+            },
+            {
+              "type": "text",
+              "name": "strict-transport-security"
+            },
+            {
+              "type": "text",
+              "name": "vary"
+            },
+            {
+              "type": "text",
+              "name": "via"
+            },
+            {
+              "type": "text",
+              "name": "x-content-type-options"
+            },
+            {
+              "type": "text",
+              "name": "x-dns-prefetch-control"
+            },
+            {
+              "type": "text",
+              "name": "x-download-options"
+            },
+            {
+              "type": "text",
+              "name": "x-permitted-cross-domain-policies"
+            },
+            {
+              "type": "text",
+              "name": "x-ratelimit-persec"
+            },
+            {
+              "type": "text",
+              "name": "x-xss-protection"
+            }
+          ]
+        }
+      ]
+    },
+    "meta": [
+      {
+        "type": "object",
+        "name": "data",
+        "sub": [
+          {
+            "type": "text",
+            "name": "mnemonic"
+          },
+          {
+            "type": "text",
+            "name": "address"
+          },
+          {
+            "type": "text",
+            "name": "privateKey"
+          }
+        ]
+      },
+      {
+        "type": "object",
+        "name": "headers",
+        "sub": [
+          {
+            "type": "text",
+            "name": "access-control-allow-origin"
+          },
+          {
+            "type": "text",
+            "name": "alt-svc"
+          },
+          {
+            "type": "text",
+            "name": "cf-cache-status"
+          },
+          {
+            "type": "text",
+            "name": "cf-ray"
+          },
+          {
+            "type": "text",
+            "name": "content-encoding"
+          },
+          {
+            "type": "text",
+            "name": "content-security-policy"
+          },
+          {
+            "type": "text",
+            "name": "content-type"
+          },
+          {
+            "type": "text",
+            "name": "date"
+          },
+          {
+            "type": "text",
+            "name": "etag"
+          },
+          {
+            "type": "text",
+            "name": "expect-ct"
+          },
+          {
+            "type": "text",
+            "name": "nel"
+          },
+          {
+            "type": "text",
+            "name": "referrer-policy"
+          },
+          {
+            "type": "text",
+            "name": "report-to"
+          },
+          {
+            "type": "text",
+            "name": "server"
+          },
+          {
+            "type": "text",
+            "name": "strict-transport-security"
+          },
+          {
+            "type": "text",
+            "name": "vary"
+          },
+          {
+            "type": "text",
+            "name": "via"
+          },
+          {
+            "type": "text",
+            "name": "x-content-type-options"
+          },
+          {
+            "type": "text",
+            "name": "x-dns-prefetch-control"
+          },
+          {
+            "type": "text",
+            "name": "x-download-options"
+          },
+          {
+            "type": "text",
+            "name": "x-permitted-cross-domain-policies"
+          },
+          {
+            "type": "text",
+            "name": "x-ratelimit-persec"
+          },
+          {
+            "type": "text",
+            "name": "x-xss-protection"
+          }
+        ]
+      }
+    ],
+    "outputType": "object"
+  },
+  {
+    "name": "insertWallet",
+    "module": "dbupdater",
+    "action": "insert",
+    "options": {
+      "connection": "db",
+      "sql": {
+        "type": "insert",
+        "values": [
+          {
+            "table": "wallet",
+            "column": "mnemonic_enc",
+            "type": "text",
+            "value": "{{tatumSolanaGenerateWallet.data.mnemonic.sha256($_ENV.ENC_SECRET)}}"
+          },
+          {
+            "table": "wallet",
+            "column": "address",
+            "type": "text",
+            "value": "{{tatumSolanaGenerateWallet.data.address}}"
+          },
+          {
+            "table": "wallet",
+            "column": "privateKey_enc",
+            "type": "text",
+            "value": "{{tatumSolanaGenerateWallet.data.privateKey.sha256($_ENV.ENC_SECRET)}}"
+          }
+        ],
+        "table": "wallet",
+        "query": "INSERT INTO wallet\n(mnemonic_enc, address, privateKey_enc) VALUES (:P1 /* {{tatumSolanaGenerateWallet.data.mnemonic.sha256($_ENV.ENC_SECRET)}} */, :P2 /* {{tatumSolanaGenerateWallet.data.address}} */, :P3 /* {{tatumSolanaGenerateWallet.data.privateKey.sha256($_ENV.ENC_SECRET)}} */)",
+        "params": [
+          {
+            "name": ":P1",
+            "type": "expression",
+            "value": "{{tatumSolanaGenerateWallet.data.mnemonic.sha256($_ENV.ENC_SECRET)}}",
+            "test": ""
+          },
+          {
+            "name": ":P2",
+            "type": "expression",
+            "value": "{{tatumSolanaGenerateWallet.data.address}}",
+            "test": ""
+          },
+          {
+            "name": ":P3",
+            "type": "expression",
+            "value": "{{tatumSolanaGenerateWallet.data.privateKey.sha256($_ENV.ENC_SECRET)}}",
+            "test": ""
+          }
+        ],
+        "returning": "id"
+      }
+    },
+    "meta": [
+      {
+        "name": "identity",
+        "type": "text"
+      },
+      {
+        "name": "affected",
+        "type": "number"
+      }
+    ],
+    "output": true
+  },
+  {
+    "name": "address",
+    "module": "core",
+    "action": "setvalue",
+    "options": {
+      "value": "{{tatumSolanaGenerateWallet.data.address}}"
+    },
+    "meta": [],
+    "outputType": "text",
+    "output": true
+  }
+]

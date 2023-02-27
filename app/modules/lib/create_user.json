@@ -1,0 +1,491 @@
+{
+  "meta": {
+    "$_PARAM": [
+      {
+        "type": "text",
+        "name": "WaId"
+      }
+    ]
+  },
+  "exec": {
+    "steps": [
+      {
+        "name": "insertWaId",
+        "module": "dbupdater",
+        "action": "insert",
+        "options": {
+          "connection": "db",
+          "sql": {
+            "type": "insert",
+            "values": [
+              {
+                "table": "user",
+                "column": "WaId",
+                "type": "text",
+                "value": "{{$_PARAM.WaId}}"
+              }
+            ],
+            "table": "user",
+            "returning": "id",
+            "query": "INSERT INTO user\n(WaId) VALUES (:P1 /* {{$_PARAM.WaId}} */)",
+            "params": [
+              {
+                "name": ":P1",
+                "type": "expression",
+                "value": "{{$_PARAM.WaId}}",
+                "test": ""
+              }
+            ]
+          }
+        },
+        "meta": [
+          {
+            "name": "identity",
+            "type": "text"
+          },
+          {
+            "name": "affected",
+            "type": "number"
+          }
+        ]
+      },
+      {
+        "name": "getWallet",
+        "module": "core",
+        "action": "exec",
+        "options": {
+          "exec": "create_wallet"
+        }
+      },
+      {
+        "name": "",
+        "module": "core",
+        "action": "condition",
+        "options": {
+          "if": "{{getWallet.insertWallet.identity>0}}",
+          "then": {
+            "steps": [
+              {
+                "name": "tatumCreateVA",
+                "module": "api",
+                "action": "send",
+                "options": {
+                  "url": "https://api.tatum.io/v3/ledger/account",
+                  "method": "POST",
+                  "dataType": "json",
+                  "data": {
+                    "currency": "USDC_V",
+                    "accountingCurrency": "USD",
+                    "accountNumber": "{{$_PARAM.WaId}}",
+                    "address": "{{getWallet.address}}"
+                  },
+                  "headers": {
+                    "Content-Type": "application/json",
+                    "x-api-key": "{{$_ENV.TATUM_KEY}}"
+                  },
+                  "schema": [
+                    {
+                      "type": "object",
+                      "name": "data",
+                      "sub": [
+                        {
+                          "type": "text",
+                          "name": "currency"
+                        },
+                        {
+                          "type": "boolean",
+                          "name": "active"
+                        },
+                        {
+                          "type": "object",
+                          "name": "balance",
+                          "sub": [
+                            {
+                              "type": "text",
+                              "name": "accountBalance"
+                            },
+                            {
+                              "type": "text",
+                              "name": "availableBalance"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "boolean",
+                          "name": "frozen"
+                        },
+                        {
+                          "type": "text",
+                          "name": "accountingCurrency"
+                        },
+                        {
+                          "type": "text",
+                          "name": "id"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "name": "headers",
+                      "sub": [
+                        {
+                          "type": "text",
+                          "name": "access-control-allow-origin"
+                        },
+                        {
+                          "type": "text",
+                          "name": "alt-svc"
+                        },
+                        {
+                          "type": "text",
+                          "name": "cf-cache-status"
+                        },
+                        {
+                          "type": "text",
+                          "name": "cf-ray"
+                        },
+                        {
+                          "type": "text",
+                          "name": "content-encoding"
+                        },
+                        {
+                          "type": "text",
+                          "name": "content-security-policy"
+                        },
+                        {
+                          "type": "text",
+                          "name": "content-type"
+                        },
+                        {
+                          "type": "text",
+                          "name": "date"
+                        },
+                        {
+                          "type": "text",
+                          "name": "etag"
+                        },
+                        {
+                          "type": "text",
+                          "name": "expect-ct"
+                        },
+                        {
+                          "type": "text",
+                          "name": "nel"
+                        },
+                        {
+                          "type": "text",
+                          "name": "referrer-policy"
+                        },
+                        {
+                          "type": "text",
+                          "name": "report-to"
+                        },
+                        {
+                          "type": "text",
+                          "name": "server"
+                        },
+                        {
+                          "type": "text",
+                          "name": "strict-transport-security"
+                        },
+                        {
+                          "type": "text",
+                          "name": "via"
+                        },
+                        {
+                          "type": "text",
+                          "name": "x-content-type-options"
+                        },
+                        {
+                          "type": "text",
+                          "name": "x-dns-prefetch-control"
+                        },
+                        {
+                          "type": "text",
+                          "name": "x-download-options"
+                        },
+                        {
+                          "type": "text",
+                          "name": "x-permitted-cross-domain-policies"
+                        },
+                        {
+                          "type": "text",
+                          "name": "x-ratelimit-persec"
+                        },
+                        {
+                          "type": "text",
+                          "name": "x-xss-protection"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "meta": [
+                  {
+                    "type": "object",
+                    "name": "data",
+                    "sub": [
+                      {
+                        "type": "text",
+                        "name": "currency"
+                      },
+                      {
+                        "type": "boolean",
+                        "name": "active"
+                      },
+                      {
+                        "type": "object",
+                        "name": "balance",
+                        "sub": [
+                          {
+                            "type": "text",
+                            "name": "accountBalance"
+                          },
+                          {
+                            "type": "text",
+                            "name": "availableBalance"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "boolean",
+                        "name": "frozen"
+                      },
+                      {
+                        "type": "text",
+                        "name": "accountingCurrency"
+                      },
+                      {
+                        "type": "text",
+                        "name": "id"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "object",
+                    "name": "headers",
+                    "sub": [
+                      {
+                        "type": "text",
+                        "name": "access-control-allow-origin"
+                      },
+                      {
+                        "type": "text",
+                        "name": "alt-svc"
+                      },
+                      {
+                        "type": "text",
+                        "name": "cf-cache-status"
+                      },
+                      {
+                        "type": "text",
+                        "name": "cf-ray"
+                      },
+                      {
+                        "type": "text",
+                        "name": "content-encoding"
+                      },
+                      {
+                        "type": "text",
+                        "name": "content-security-policy"
+                      },
+                      {
+                        "type": "text",
+                        "name": "content-type"
+                      },
+                      {
+                        "type": "text",
+                        "name": "date"
+                      },
+                      {
+                        "type": "text",
+                        "name": "etag"
+                      },
+                      {
+                        "type": "text",
+                        "name": "expect-ct"
+                      },
+                      {
+                        "type": "text",
+                        "name": "nel"
+                      },
+                      {
+                        "type": "text",
+                        "name": "referrer-policy"
+                      },
+                      {
+                        "type": "text",
+                        "name": "report-to"
+                      },
+                      {
+                        "type": "text",
+                        "name": "server"
+                      },
+                      {
+                        "type": "text",
+                        "name": "strict-transport-security"
+                      },
+                      {
+                        "type": "text",
+                        "name": "via"
+                      },
+                      {
+                        "type": "text",
+                        "name": "x-content-type-options"
+                      },
+                      {
+                        "type": "text",
+                        "name": "x-dns-prefetch-control"
+                      },
+                      {
+                        "type": "text",
+                        "name": "x-download-options"
+                      },
+                      {
+                        "type": "text",
+                        "name": "x-permitted-cross-domain-policies"
+                      },
+                      {
+                        "type": "text",
+                        "name": "x-ratelimit-persec"
+                      },
+                      {
+                        "type": "text",
+                        "name": "x-xss-protection"
+                      }
+                    ]
+                  }
+                ],
+                "outputType": "object"
+              },
+              {
+                "name": "updateAddVA",
+                "module": "dbupdater",
+                "action": "update",
+                "options": {
+                  "connection": "db",
+                  "sql": {
+                    "type": "update",
+                    "values": [
+                      {
+                        "table": "user",
+                        "column": "VirtualAccount",
+                        "type": "text",
+                        "value": "{{tatumCreateVA.data.id}}"
+                      }
+                    ],
+                    "table": "user",
+                    "wheres": {
+                      "condition": "AND",
+                      "rules": [
+                        {
+                          "id": "WaId",
+                          "field": "WaId",
+                          "type": "string",
+                          "operator": "equal",
+                          "value": "{{$_PARAM.WaId}}",
+                          "data": {
+                            "column": "WaId"
+                          },
+                          "operation": "="
+                        }
+                      ],
+                      "conditional": null,
+                      "valid": true
+                    },
+                    "returning": "id",
+                    "query": "UPDATE user\nSET VirtualAccount = :P1 /* {{tatumCreateVA.data.id}} */\nWHERE WaId = :P2 /* {{$_PARAM.WaId}} */",
+                    "params": [
+                      {
+                        "name": ":P1",
+                        "type": "expression",
+                        "value": "{{tatumCreateVA.data.id}}",
+                        "test": ""
+                      },
+                      {
+                        "operator": "equal",
+                        "type": "expression",
+                        "name": ":P2",
+                        "value": "{{$_PARAM.WaId}}",
+                        "test": ""
+                      }
+                    ]
+                  }
+                },
+                "meta": [
+                  {
+                    "name": "affected",
+                    "type": "number"
+                  }
+                ]
+              },
+              {
+                "name": "updateWalletAssignUser",
+                "module": "dbupdater",
+                "action": "update",
+                "options": {
+                  "connection": "db",
+                  "sql": {
+                    "type": "update",
+                    "values": [
+                      {
+                        "table": "wallet",
+                        "column": "userId",
+                        "type": "number",
+                        "value": "{{insertWaId.identity}}"
+                      }
+                    ],
+                    "table": "wallet",
+                    "wheres": {
+                      "condition": "AND",
+                      "rules": [
+                        {
+                          "id": "address",
+                          "field": "address",
+                          "type": "string",
+                          "operator": "equal",
+                          "value": "{{getWallet.address}}",
+                          "data": {
+                            "column": "address"
+                          },
+                          "operation": "="
+                        }
+                      ],
+                      "conditional": null,
+                      "valid": true
+                    },
+                    "returning": "id",
+                    "query": "UPDATE wallet\nSET userId = :P1 /* {{insertWaId.identity}} */\nWHERE address = :P2 /* {{getWallet.address}} */",
+                    "params": [
+                      {
+                        "name": ":P1",
+                        "type": "expression",
+                        "value": "{{insertWaId.identity}}",
+                        "test": ""
+                      },
+                      {
+                        "operator": "equal",
+                        "type": "expression",
+                        "name": ":P2",
+                        "value": "{{getWallet.address}}",
+                        "test": ""
+                      }
+                    ]
+                  }
+                },
+                "meta": [
+                  {
+                    "name": "affected",
+                    "type": "number"
+                  }
+                ],
+                "output": true
+              }
+            ]
+          }
+        },
+        "outputType": "boolean"
+      }
+    ]
+  }
+}

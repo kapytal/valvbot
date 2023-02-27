@@ -1,0 +1,24 @@
+{
+  "meta": {
+    "$_POST": [
+      {
+        "type": "text",
+        "name": "WaId"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "createUser",
+      "module": "core",
+      "action": "exec",
+      "options": {
+        "exec": "create_user",
+        "params": {
+          "WaId": "{{$_POST.WaId}}"
+        }
+      },
+      "output": true
+    }
+  }
+}
