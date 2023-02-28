@@ -1,0 +1,160 @@
+{
+  "meta": {
+    "$_GET": [
+      {
+        "type": "text",
+        "name": "sort"
+      },
+      {
+        "type": "text",
+        "name": "dir"
+      }
+    ],
+    "$_POST": [
+      {
+        "type": "text",
+        "name": "password"
+      },
+      {
+        "type": "text",
+        "name": "message"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "",
+      "module": "core",
+      "action": "condition",
+      "options": {
+        "if": "{{$_POST.password==$_ENV.ENC_SECRET}}",
+        "then": {
+          "steps": [
+            {
+              "name": "query",
+              "module": "dbconnector",
+              "action": "select",
+              "options": {
+                "connection": "db",
+                "sql": {
+                  "type": "SELECT",
+                  "columns": [
+                    {
+                      "table": "user",
+                      "column": "*"
+                    }
+                  ],
+                  "params": [],
+                  "table": {
+                    "name": "user"
+                  },
+                  "primary": "id",
+                  "joins": [],
+                  "query": "SELECT *\nFROM user"
+                }
+              },
+              "meta": [
+                {
+                  "type": "number",
+                  "name": "id"
+                },
+                {
+                  "type": "text",
+                  "name": "WaId"
+                },
+                {
+                  "type": "text",
+                  "name": "VirtualAccount"
+                },
+                {
+                  "type": "boolean",
+                  "name": "knowsWallet"
+                }
+              ],
+              "outputType": "array"
+            },
+            {
+              "name": "repeat",
+              "module": "core",
+              "action": "repeat",
+              "options": {
+                "repeat": "{{query}}",
+                "outputFields": [
+                  "WaId"
+                ],
+                "exec": {
+                  "steps": {
+                    "name": "sendWhatsapp",
+                    "module": "api",
+                    "action": "send",
+                    "options": {
+                      "url": "https://api.twilio.com/2010-04-01/Accounts/AC65f728ee6851d7a16224843eeaf97a2f/Messages.json",
+                      "method": "POST",
+                      "auth": "username",
+                      "username": "{{$_ENV.TWILIO_USER}}",
+                      "password": "{{$_ENV.TWILIO_API}}",
+                      "data": {
+                        "To": "{{'whatsapp:+'+WaId}}",
+                        "From": "whatsapp:+14155238886",
+                        "Body": "{{$_POST.message}}"
+                      },
+                      "passErrors": false
+                    }
+                  }
+                }
+              },
+              "meta": [
+                {
+                  "name": "$index",
+                  "type": "number"
+                },
+                {
+                  "name": "$number",
+                  "type": "number"
+                },
+                {
+                  "name": "$name",
+                  "type": "text"
+                },
+                {
+                  "name": "$value",
+                  "type": "object"
+                },
+                {
+                  "name": "id",
+                  "type": "number"
+                },
+                {
+                  "name": "WaId",
+                  "type": "text"
+                },
+                {
+                  "name": "VirtualAccount",
+                  "type": "text"
+                },
+                {
+                  "name": "knowsWallet",
+                  "type": "boolean"
+                }
+              ],
+              "outputType": "array",
+              "output": true
+            }
+          ]
+        },
+        "else": {
+          "steps": {
+            "name": "",
+            "module": "core",
+            "action": "response",
+            "options": {
+              "status": 400,
+              "data": "Unauthorized"
+            }
+          }
+        }
+      },
+      "outputType": "boolean"
+    }
+  }
+}

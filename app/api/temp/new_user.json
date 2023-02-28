@@ -1,0 +1,50 @@
+{
+  "meta": {
+    "$_POST": [
+      {
+        "type": "text",
+        "name": "WaId"
+      },
+      {
+        "type": "text",
+        "name": "password"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "",
+      "module": "core",
+      "action": "condition",
+      "options": {
+        "if": "{{$_POST.password==$_ENV.ENC_SECRET}}",
+        "then": {
+          "steps": {
+            "name": "createUser",
+            "module": "core",
+            "action": "exec",
+            "options": {
+              "exec": "create_user",
+              "params": {
+                "WaId": "{{$_POST.WaId}}"
+              }
+            },
+            "output": true
+          }
+        },
+        "else": {
+          "steps": {
+            "name": "",
+            "module": "core",
+            "action": "response",
+            "options": {
+              "status": 400,
+              "data": "unauthorized"
+            }
+          }
+        }
+      },
+      "outputType": "boolean"
+    }
+  }
+}

@@ -480,26 +480,18 @@
                   }
                 ],
                 "output": true
-              },
-              {
-                "name": "notifyOmar",
-                "module": "api",
-                "action": "send",
-                "options": {
-                  "url": "https://api.twilio.com/2010-04-01/Accounts/AC65f728ee6851d7a16224843eeaf97a2f/Messages.json",
-                  "method": "POST",
-                  "auth": "username",
-                  "username": "{{$_ENV.TWILIO_USER}}",
-                  "password": "{{$_ENV.TWILIO_API}}",
-                  "data": {
-                    "To": "whatsapp:+5215552153152",
-                    "From": "whatsapp:+14155238886",
-                    "Body": "{{'[Admin] Se ha registrado un nuevo usuario en Valv: ```'+$_PARAM.WaId+'```'}}"
-                  }
-                },
-                "output": true
               }
             ]
+          },
+          "else": {
+            "steps": {
+              "name": "",
+              "module": "core",
+              "action": "response",
+              "options": {
+                "status": 201
+              }
+            }
           }
         },
         "outputType": "boolean"

@@ -93,7 +93,7 @@
         "module": "core",
         "action": "condition",
         "options": {
-          "if": "{{!searchWaId.id}}",
+          "if": "{{!searchWaId}}",
           "then": {
             "steps": {
               "name": "registerUser",
@@ -104,7 +104,8 @@
                 "params": {
                   "WaId": "{{$_POST.WaId}}"
                 }
-              }
+              },
+              "output": true
             }
           }
         },
@@ -1010,7 +1011,7 @@
                 "module": "core",
                 "action": "setvalue",
                 "options": {
-                  "value": "The following is a conversation in spanish with an AI assistant called Valv, Valv can have meaningful conversations with users. The assistant is helpful and friendly. Its objective is to guide users buying and selling USDC stable coin with Mexican pesos in a P2P whatsapp market. With each response, the AI assisstant prompts the user to continue the conversation in a natural way. When the users wants to BUY Valv will answer #buy#, when the user whats to sell Valv will answer #sell#, when user wants to deposit, withdraw or his balance Valv will answer #balance#.Also when the user request support Valv will answer with #support# so a human gets notified to get involved in the conversation. Axel: Hola soy Valv, puedo ayudarte a ponerte de acuerdo con otras personas para comprar o vender USDC. ¿Cómo puedo ayudarte? Usuario: {{$_POST.Body}}. Valv: "
+                  "value": "The following is a conversation in spanish or english with an AI assistant called Valv, Valv can have meaningful conversations with users. The assistant is helpful and friendly. Its objective is to guide users buying and selling USDC stable coin with Mexican pesos in a P2P whatsapp market. With each response, the AI assisstant prompts the user to continue the conversation in a natural way. When the users wants to BUY Valv will answer #buy#, when the user whats to sell Valv will answer #sell#, when user wants to deposit, withdraw or his balance Valv will answer #balance#.Also when the user request support Valv will answer with #support# so a human gets notified to get involved in the conversation. Axel: Hola soy Valv, puedo ayudarte a ponerte de acuerdo con otras personas para comprar o vender USDC. ¿Cómo puedo ayudarte? Usuario: {{$_POST.Body}}. Valv: "
                 },
                 "meta": [],
                 "outputType": "text",
@@ -1180,8 +1181,7 @@
                     "Body": "{{openAIcompletion.data.choices[0].text}}"
                   },
                   "username": "{{$_ENV.TWILIO_USER}}"
-                },
-                "output": false
+                }
               },
               {
                 "name": "sample",
@@ -1207,7 +1207,7 @@
                         "module": "core",
                         "action": "wait",
                         "options": {
-                          "delay": 5000
+                          "delay": 10000
                         }
                       },
                       {
@@ -1266,8 +1266,7 @@
                           "From": "{{$_POST.From}}",
                           "WaId": "{{$_POST.WaId}}"
                         }
-                      },
-                      "output": true
+                      }
                     }
                   }
                 },
@@ -1291,8 +1290,7 @@
                   "From": "whatsapp:+14155238886",
                   "Body": "{{sendToDF.data.queryResult.fulfillmentMessages[0].text.text[0]}}"
                 }
-              },
-              "output": true
+              }
             }
           }
         },
